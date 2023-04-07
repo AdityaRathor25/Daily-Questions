@@ -32,32 +32,25 @@
 #include<iostream>
 #include<bits/stdc++.h>
 using namespace std;
-int binarySearch(vector<int>& potions , int &m , long long target)
-    {
-        int s = 0;
-        int e = m-1;
-        int mid;
-        while(s<e)
-        {
-            mid = (s+e)/2;
-            if(potions[mid]>=target)
-                e = mid;
-            else
-                s = mid+1;
-        }
-        return s;
-    }
-    vector<int> successfulPairs(vector<int>& spells, vector<int>& potions, long long success) {
-        vector<int> pairs;
+vector<int> successfulPairs(vector<int>& spells, vector<int>& potions, long long success) {
         int n = spells.size();
         int m = potions.size();
-        sort(potions.begin() , potions.end() );
-        for(int i =0 ; i<n ; i++)
-        {
-        long long target = ceil(success/(float)spells[i]);
-        int index = binarySearch(potions , m , target);
-        int validPotions = ((m-1)-index);
-        pairs.push_back(validPotions);
+        vector<int> pairs(n, 0);
+        sort(potions.begin(), potions.end());
+        for (int i = 0; i < n; i++) {
+            int spell = spells[i];
+            int left = 0;
+            int right = m - 1;
+            while (left <= right) {
+                int mid = left + (right - left) / 2;
+                long long product = (long long)spell * (long long)potions[mid];
+                if (product >= success) {
+                    right = mid - 1;
+                } else {
+                    left = mid + 1;
+                }
+            }
+            pairs[i] = m - left;
         }
         return pairs;
     }
